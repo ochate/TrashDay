@@ -126,19 +126,40 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ロギング設定
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,  # 既存のロガーを無効化
+    'disable_existing_loggers': False,  # True にすると全てのデフォルトの設定が無効になるので注意
 
-    # ロガーの設定
+    # ロガー（ログメッセージ生成）の設定
     'loggers': {
         # Djangoが使うロガー
         'django': {
-            'handlers':['console'],
-            'level': 'INFO',
+            'handlers':['console'],    # consoleハンドラに
+            'level': 'INFO',           # INFOレベル以上のログメッセージを送る
         },
         # mainアプリケーションが使うロガー
         'main': {
             'handlers': ['console'],
             'level': 'DEBUG',
+        },
+    },
+
+    # ハンドラ（ログの出力先、処理）の設定
+    'handlers': {
+        'console': {                   # コンソールに出力する
+            'level': 'DEBUG',          # DEBUGレベル以上のログメッセージを処理する
+            'class': 'logging.StreamHandler',
+            'formatter': 'dev',        # devフォーマッタの形式に整形する
+        },
+    },
+
+    # フォーマッタ（表示書式）の設定
+    'formatters': {
+        'dev': {
+            'format': '\t'.join([      # 書式（タブ(/t)区切り）
+                '%(asctime)s',         # ログが記録された日時
+                '[%(levelname)s]',     # ログレベル（深刻度）
+                '%(pathname)s(Line:%(lineno)d)',    # ファイル（パス）名、行番号
+                '%(message)s',         # ログメッセージ
+            ])
         },
     },
 }
